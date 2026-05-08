@@ -1,0 +1,54 @@
+:root {
+  /* Dynamic Premium Dark Theme */
+  --color-primary: #121212;
+  --color-primary-light: #2A2A2A;
+  --color-accent: #E29B7F; /* Soft peach / rose gold */
+  --color-accent-hover: #F2AE95;
+  --color-accent-glow: rgba(226, 155, 127, 0.4);
+  
+  --color-bg: #090909; /* Deep absolute dark */
+  --color-bg-secondary: #161616;
+  --color-surface: rgba(25, 25, 25, 0.6);
+  --color-surface-hover: rgba(35, 35, 35, 0.8);
+  
+  /* Text */
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0A0;
+  --text-disabled: #555555;
+  --text-inverse: #000000;
+
+  /* State Colors */
+  --color-success: #34D399;
+  --color-error: #F87171;
+  --color-warning: #FBBF24;
+  --color-info: #38BDF8;
+
+  /* Loyalty Tiers */
+  --tier-bronze: linear-gradient(135deg, #cd7f32, #ffd700);
+  --tier-silver: linear-gradient(135deg, #e0e0e0, #9e9e9e);
+  --tier-gold: linear-gradient(135deg, #ffdf00, #d4af37);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* Form & Radius */
+  --border-radius-sm: 12px;
+  --border-radius-md: 20px;
+  --border-radius-lg: 32px;
+  --border-radius-full: 9999px;
+  
+  /* Premium Glass Shadows */
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--color-accent-glow);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-border-hover: 1px solid rgba(255, 255, 255, 0.15);
+
+  /* Typography */
+  --font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+}
