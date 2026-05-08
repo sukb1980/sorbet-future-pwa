@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/sorbet-future-pwa/sw.js', { scope: '/sorbet-future-pwa/' })})}
