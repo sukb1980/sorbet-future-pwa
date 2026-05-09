@@ -15,6 +15,7 @@ const paymentMethods = [
   { id: 'card', label: 'Credit / Debit Card', icon: '💳' },
   { id: 'eft', label: 'Instant EFT', icon: '🏦' },
   { id: 'gift-card', label: 'Gift Card', icon: '🎁' },
+  { id: 'loyalty', label: 'Loyalty Points', icon: '⭐' },
   { id: 'apple-pay', label: 'Apple Pay', icon: '🍎' },
   { id: 'google-pay', label: 'Google Pay', icon: '🔵' },
 ];
@@ -25,7 +26,7 @@ const fmt = (amt, currency = 'ZAR') => {
 };
 
 export default function Checkout() {
-  const { currentUser, currency, showToast } = useAppContext();
+  const { currentUser, currency, showToast, addPoints } = useAppContext();
   const { items, total, subtotal, discountAmount, loyaltyDiscount, deliveryFee, clearCart } = useCart();
   const navigate = useNavigate();
   const [step, setStep] = useState(2);
@@ -37,6 +38,14 @@ export default function Checkout() {
   const [orderId] = useState(`ORD-${new Date().getFullYear()}-${Math.floor(Math.random() * 9000 + 1000)}`);
 
   const handlePay = async () => {
+    if (paymentMethod === 'loyalty') {
+      const pointsNeeded = total * 10;
+      if ((currentUser?.points || 0) < pointsNeeded) {
+        showToast?.(`Insufficient points. You need ${pointsNeeded} points.`, 'error');
+        return;
+      }
+    }
+
     setProcessing(true);
     try {
       const response = await paymentAuthorize({ amount: total, currency, method: paymentMethod, cardLast4: cardDetails.number.slice(-4) || '****' });
@@ -56,6 +65,10 @@ export default function Checkout() {
         };
         const existingOrders = JSON.parse(localStorage.getItem('srb_orders') || '[]');
         localStorage.setItem('srb_orders', JSON.stringify([newOrder, ...existingOrders]));
+
+        if (paymentMethod === 'loyalty') {
+          addPoints(-(total * 10));
+        }
 
         clearCart();
         setStep(4);
@@ -162,6 +175,26 @@ export default function Checkout() {
           {paymentMethod === 'gift-card' && (
             <Card variant="default" padding="var(--space-lg)" style={{ marginBottom: 'var(--space-xl)' }}>
               <Input label="Gift Card Code" placeholder="SRB-XXXX-XXXX-XXXX" value={giftCode} onChange={(e) => setGiftCode(e.target.value)} helper="Enter your gift card code (found in your email or Vouchers tab)" />
+            </Card>
+          )}
+
+          {paymentMethod === 'loyalty' && (
+            <Card variant="default" padding="var(--space-lg)" style={{ marginBottom: 'var(--space-xl)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Available Points</p>
+                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--color-accent)' }}>{currentUser?.points || 0} pts</p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Points Required</p>
+                  <p style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{total * 10} pts</p>
+                </div>
+              </div>
+              {(currentUser?.points || 0) < total * 10 && (
+                <p style={{ fontSize: '0.75rem', color: 'var(--color-error)', marginTop: 'var(--space-sm)' }}>
+                  You don't have enough points to cover this purchase.
+                </p>
+              )}
             </Card>
           )}
 

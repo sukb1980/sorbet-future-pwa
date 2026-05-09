@@ -16,6 +16,7 @@ export const AppProvider = ({ children }) => {
   });
   const [notificationPermission, setNotificationPermission] = useState(null);
   const [locationPermission, setLocationPermission] = useState(null);
+  const [popiaPermission, setPopiaPermission] = useState(null);
 
   /* ---- Auth State ---- */
   const [currentUser, setCurrentUser] = useState(() => {
@@ -128,15 +129,25 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('srb_onboarded', 'true');
   }, []);
 
+  const grantPopia = useCallback(() => {
+    setPopiaPermission('granted');
+    setOnboardingStep('notifications');
+  }, []);
+
+  const denyPopia = useCallback(() => {
+    setPopiaPermission('denied');
+    setOnboardingStep('notifications');
+  }, []);
+
   const grantNotifications = useCallback(() => {
     setNotificationPermission('granted');
-    completeOnboarding();
-  }, [completeOnboarding]);
+    setOnboardingStep('location');
+  }, []);
 
   const denyNotifications = useCallback(() => {
     setNotificationPermission('denied');
-    completeOnboarding();
-  }, [completeOnboarding]);
+    setOnboardingStep('location');
+  }, []);
 
   const grantLocation = useCallback(() => {
     setLocationPermission('granted');
@@ -182,6 +193,7 @@ export const AppProvider = ({ children }) => {
   const value = useMemo(() => ({
     /* Onboarding */
     onboardingStep, setOnboardingStep, completeOnboarding,
+    popiaPermission, grantPopia, denyPopia,
     notificationPermission, grantNotifications, denyNotifications,
     locationPermission, grantLocation, denyLocation,
     /* Auth */
@@ -203,14 +215,14 @@ export const AppProvider = ({ children }) => {
     /* Loyalty */
     addPoints,
   }), [
-    onboardingStep, notificationPermission, locationPermission,
+    onboardingStep, popiaPermission, notificationPermission, locationPermission,
     currentUser, isGuest, isLocked, loginAttempts,
     language, currency, region,
     preferredStore, nearestStore,
     toasts, isOffline,
     installPrompt, showInstallBanner,
     login, register, logout, continueAsGuest,
-    completeOnboarding, grantNotifications, denyNotifications, grantLocation, denyLocation,
+    completeOnboarding, grantPopia, denyPopia, grantNotifications, denyNotifications, grantLocation, denyLocation,
     showToast, dismissToast, triggerInstall, t, addPoints,
   ]);
 

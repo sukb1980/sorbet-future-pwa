@@ -7,6 +7,7 @@ import { CartProvider } from './context/CartContext';
 import { MainLayout } from './layouts/MainLayout';
 import {
   SplashScreen,
+  POPIAPermissionPrompt,
   NotificationPermissionPrompt,
   LocationPermissionPrompt,
 } from './components/onboarding/OnboardingScreens';
@@ -66,10 +67,13 @@ const GuestOnly = ({ element }) => {
 
 /* ---- Onboarding Guard ---- */
 function OnboardingGate({ children }) {
-  const { onboardingStep, grantNotifications, denyNotifications, grantLocation, denyLocation } = useAppContext();
+  const { onboardingStep, grantPopia, denyPopia, grantNotifications, denyNotifications, grantLocation, denyLocation } = useAppContext();
 
   if (onboardingStep === 'splash') return <SplashScreen onComplete={() => {}} />;
   // Note: onboardingStep transitions are handled inside context via actions
+  if (onboardingStep === 'popia') return (
+    <POPIAPermissionPrompt onAllow={grantPopia} onDeny={denyPopia} />
+  );
   if (onboardingStep === 'notifications') return (
     <NotificationPermissionPrompt onAllow={grantNotifications} onDeny={denyNotifications} />
   );
@@ -85,7 +89,7 @@ function SplashBridge() {
   const { onboardingStep, setOnboardingStep } = useAppContext();
   React.useEffect(() => {
     if (onboardingStep === 'splash') {
-      const t = setTimeout(() => setOnboardingStep('notifications'), 2200);
+      const t = setTimeout(() => setOnboardingStep('popia'), 2200);
       return () => clearTimeout(t);
     }
   }, [onboardingStep, setOnboardingStep]);

@@ -32,6 +32,23 @@ export const SplashScreen = ({ onComplete }) => {
   );
 };
 
+/* ---- POPIA Permission Prompt ---- */
+export const POPIAPermissionPrompt = ({ onAllow, onDeny }) => (
+  <div className="fullscreen-overlay" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}>
+    <div className="modal-content animate-slide-up" style={{ maxWidth: '420px', borderRadius: 'var(--radius-xl)', textAlign: 'center' }}>
+      <div style={{ fontSize: '3.5rem', marginBottom: 'var(--space-md)' }}>🛡️</div>
+      <h2 style={{ fontSize: '1.375rem', fontWeight: 700, marginBottom: 'var(--space-sm)' }}>Your Privacy Matters</h2>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-xl)', lineHeight: 1.6 }}>
+        In compliance with the <strong>Protection of Personal Information Act (POPIA)</strong>, please consent to the processing of your personal data to use our services and receive tailored recommendations.
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)' }}>
+        <Button variant="primary" fullWidth onClick={onAllow}>I Consent</Button>
+        <Button variant="ghost" fullWidth onClick={onDeny} style={{ color: 'var(--text-muted)' }}>Decline</Button>
+      </div>
+    </div>
+  </div>
+);
+
 /* ---- Notification Permission Prompt ---- */
 export const NotificationPermissionPrompt = ({ onAllow, onDeny }) => (
   <div className="fullscreen-overlay" style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}>

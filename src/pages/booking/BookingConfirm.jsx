@@ -38,6 +38,7 @@ export default function BookingConfirm() {
   const [confirmed, setConfirmed] = useState(false);
   const [confirmationNumber, setConfirmationNumber] = useState('');
   const [addedAftercareIds, setAddedAftercareIds] = useState([]);
+  const [paymentMethod, setPaymentMethod] = useState('store'); // 'store' | 'loyalty'
 
   const aftercareProducts = (service?.aftercareProductIds || [])
     .map((id) => products.find((p) => p.id === id))
@@ -59,6 +60,14 @@ export default function BookingConfirm() {
   ) : 0;
 
   const handleConfirm = async () => {
+    if (paymentMethod === 'loyalty') {
+      const pointsNeeded = totalPrice * 10;
+      if ((currentUser?.points || 0) < pointsNeeded) {
+        showToast(`Insufficient points. You need ${pointsNeeded} points.`, 'error');
+        return;
+      }
+    }
+
     setConfirming(true);
     try {
       const result = await zenotiCreateBooking({ serviceId, citizenId, date, slot, storeId, addOns: selectedAddOns });
@@ -83,8 +92,14 @@ export default function BookingConfirm() {
 
       setConfirmationNumber(result.confirmationNumber);
       setConfirmed(true);
-      addPoints(pointsToEarn);
-      showToast(`Booking confirmed! You earned ${pointsToEarn} loyalty points. 🌸`, 'success');
+      
+      if (paymentMethod === 'loyalty') {
+        addPoints(-(totalPrice * 10));
+        showToast(`Booking confirmed! Paid with loyalty points. 🌸`, 'success');
+      } else {
+        addPoints(pointsToEarn);
+        showToast(`Booking confirmed! You'll earn ${pointsToEarn} loyalty points. 🌸`, 'success');
+      }
     } catch (e) {
       showToast('Something went wrong. Please try again.', 'error');
     }
@@ -211,9 +226,36 @@ export default function BookingConfirm() {
         </div>
         <p style={{ fontSize: '0.75rem', color: 'var(--color-success)', marginTop: '8px' }}>✨ You'll earn ~{pointsToEarn} loyalty points for this booking</p>
       </Card>
+      
+      {/* Payment Selection */}
+      <h3 style={{ marginBottom: 'var(--space-md)' }}>Payment Option</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)', marginBottom: 'var(--space-xl)' }}>
+        {[
+          { id: 'store', label: 'Pay at Store', icon: '🏪' },
+          { id: 'loyalty', label: 'Pay with Loyalty Points', icon: '⭐' }
+        ].map((m) => (
+          <button key={m.id} onClick={() => setPaymentMethod(m.id)}
+            style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)', padding: 'var(--space-md)', borderRadius: 'var(--radius-md)', border: `2px solid ${paymentMethod === m.id ? 'var(--color-accent)' : 'var(--color-border)'}`, background: paymentMethod === m.id ? 'var(--color-rose-gold-light)' : 'var(--color-surface)', cursor: 'pointer', fontFamily: 'var(--font-family)', textAlign: 'left', transition: 'var(--transition-fast)' }}>
+            <span style={{ fontSize: '1.5rem' }}>{m.icon}</span>
+            <div style={{ flex: 1 }}>
+              <p style={{ fontWeight: 600, fontSize: '0.9rem', color: paymentMethod === m.id ? 'var(--color-accent)' : 'var(--text-primary)' }}>{m.label}</p>
+              {m.id === 'loyalty' && (
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  Balance: {currentUser?.points || 0} pts (Required: {totalPrice * 10} pts)
+                </p>
+              )}
+            </div>
+            <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: `2px solid ${paymentMethod === m.id ? 'var(--color-accent)' : 'var(--color-border)'}`, background: paymentMethod === m.id ? 'var(--color-accent)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              {paymentMethod === m.id && <span style={{ color: '#fff', fontSize: '0.6rem' }}>✓</span>}
+            </div>
+          </button>
+        ))}
+      </div>
 
       <div className="sticky-action-bar">
-        <Button variant="primary" fullWidth size="lg" loading={confirming} onClick={handleConfirm}>Confirm & Book</Button>
+        <Button variant="primary" fullWidth size="lg" loading={confirming} onClick={handleConfirm}>
+          {paymentMethod === 'loyalty' ? `Pay ${totalPrice * 10} Points & Book` : 'Confirm & Book'}
+        </Button>
       </div>
     </div>
   );
