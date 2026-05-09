@@ -98,7 +98,7 @@ export default function BookingServices() {
               </div>
               <div style={{ display: 'flex', gap: 'var(--space-sm)', marginTop: 'var(--space-md)' }}>
                 <Button variant="outline" size="sm" onClick={() => handleServiceDetail(svc.id)} style={{ flex: 1 }}>Details</Button>
-                <Button variant="primary" size="sm" onClick={() => handleBook(svc.id)} style={{ flex: 2 }}>Book Now</Button>
+                <Button variant="primary" size="sm" onClick={() => handleBook(svc.id)} style={{ flex: 1 }}>Book Now</Button>
               </div>
               {svc.requiresForm && (
                 <p style={{ fontSize: '0.75rem', color: 'var(--color-warning)', marginTop: '8px', display: 'flex', alignItems: 'center', gap: '4px' }}>⚠️ Consultation form required before service</p>

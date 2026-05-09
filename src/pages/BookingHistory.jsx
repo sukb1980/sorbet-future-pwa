@@ -1,5 +1,5 @@
 /* Booking History Page — Sorbet Future Fit */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { Card } from '../components/ui/Card';
@@ -18,27 +18,36 @@ const fmtDate = (dateStr) => {
   return d.toLocaleDateString('en-ZA', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
 };
 
-export default function BookingHistory() {
+export default function BookingHistory({ embedded = false }) {
   const { currentUser } = useAppContext();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('upcoming');
   const [ratingModal, setRatingModal] = useState(null);
 
+  const [localBookings, setLocalBookings] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('srb_my_bookings') || '[]');
+    setLocalBookings(saved);
+  }, []);
+
+  const allBookings = [...localBookings, ...bookings];
+
   const tabs = [
-    { label: 'Upcoming', value: 'upcoming', count: bookings.filter((b) => b.status === 'upcoming').length },
+    { label: 'Upcoming', value: 'upcoming', count: allBookings.filter((b) => b.status === 'upcoming').length },
     { label: 'Past', value: 'past' },
     { label: 'Group', value: 'group' },
   ];
 
   const displayed = activeTab === 'upcoming'
-    ? bookings.filter((b) => b.status === 'upcoming')
+    ? allBookings.filter((b) => b.status === 'upcoming')
     : activeTab === 'past'
-    ? bookings.filter((b) => b.status !== 'upcoming')
+    ? allBookings.filter((b) => b.status !== 'upcoming')
     : groupBookings;
 
   return (
-    <div className="page-container animate-fade-in" style={{ paddingBottom: '100px' }}>
-      <h1 style={{ marginBottom: 'var(--space-xl)' }}>My Bookings</h1>
+    <div className={embedded ? "animate-fade-in" : "page-container animate-fade-in"} style={{ paddingBottom: embedded ? '0' : '100px' }}>
+      {!embedded && <h1 style={{ marginBottom: 'var(--space-xl)' }}>My Bookings</h1>}
       <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} variant="pill" />
 
       {displayed.length === 0 ? (

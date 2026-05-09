@@ -8,7 +8,9 @@ import { Input, Select, Checkbox } from '../components/ui/Input';
 import { Tabs } from '../components/ui/Tabs';
 import { Avatar, ProgressBar } from '../components/ui/Primitives';
 import { getNextTier, getProgressToNextTier, getTierById } from '../data/loyalty';
-import { FiEdit, FiLogOut, FiStar, FiAward, FiSettings, FiGlobe, FiBell, FiUser } from 'react-icons/fi';
+import { FiEdit, FiLogOut, FiStar, FiAward, FiSettings, FiGlobe, FiBell, FiUser, FiShoppingBag, FiCalendar } from 'react-icons/fi';
+import { formatPrice } from '../data/i18n';
+import BookingHistory from './BookingHistory';
 
 const tierColors = { Bronze: '#CD7F32', Silver: '#9E9E9E', Gold: '#B8860B' };
 
@@ -45,6 +47,8 @@ export default function Profile() {
 
   const tabs = [
     { label: 'My Profile', value: 'profile', icon: <FiUser size={14} /> },
+    { label: 'Bookings', value: 'bookings', icon: <FiCalendar size={14} /> },
+    { label: 'Order History', value: 'orders', icon: <FiShoppingBag size={14} /> },
     { label: 'Preferences', value: 'preferences', icon: <FiSettings size={14} /> },
     { label: 'Loyalty Card', value: 'clubcard', icon: <FiStar size={14} /> },
   ];
@@ -111,6 +115,16 @@ export default function Profile() {
             Sign Out
           </Button>
         </div>
+      )}
+
+      {/* Bookings Tab */}
+      {activeTab === 'bookings' && (
+        <BookingHistory embedded={true} />
+      )}
+
+      {/* Order History Tab */}
+      {activeTab === 'orders' && (
+        <OrderHistoryList currency={currency} />
       )}
 
       {/* Preferences Tab */}
@@ -187,6 +201,62 @@ export default function Profile() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Subcomponent for Order History
+function OrderHistoryList({ currency }) {
+  const [orders, setOrders] = useState([]);
+
+  React.useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('srb_orders') || '[]');
+    setOrders(saved);
+  }, []);
+
+  if (orders.length === 0) {
+    return (
+      <Card variant="default" padding="var(--space-xl)" style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '3rem', marginBottom: 'var(--space-md)' }}>🛍️</div>
+        <h3 style={{ marginBottom: '8px' }}>No orders yet</h3>
+        <p style={{ color: 'var(--text-secondary)' }}>When you make a purchase, it will appear here.</p>
+      </Card>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}>
+      {orders.map((order) => (
+        <Card key={order.orderId} variant="default" padding="var(--space-lg)">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-sm)' }}>
+            <div>
+              <p style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>
+                {new Date(order.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </p>
+              <h4 style={{ fontSize: '1.1rem' }}>Order {order.orderId}</h4>
+            </div>
+            <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.1rem' }}>
+              {formatPrice(order.total, currency)}
+            </div>
+          </div>
+          
+          <div style={{ borderTop: '1px solid var(--color-border-light)', paddingTop: 'var(--space-sm)', marginTop: 'var(--space-sm)', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+            {order.items.map((item, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+                <span>{item.quantity}x {item.name}</span>
+                <span>{formatPrice(item.price * item.quantity, currency)}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-md)' }}>
+            <span style={{ fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px', background: 'var(--color-success-bg)', color: 'var(--color-success)', padding: '2px 8px', borderRadius: 'var(--radius-full)' }}>
+              <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor' }} /> Completed
+            </span>
+            <Button variant="outline" size="sm">View Receipt</Button>
+          </div>
+        </Card>
+      ))}
     </div>
   );
 }

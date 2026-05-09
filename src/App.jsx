@@ -59,8 +59,8 @@ const AuthRequired = ({ element, allowGuest = true }) => {
 
 /* ---- Auth Guard (redirect if already logged in) ---- */
 const GuestOnly = ({ element }) => {
-  const { currentUser, isGuest } = useAppContext();
-  if (currentUser || isGuest) return <Navigate to="/" replace />;
+  const { currentUser } = useAppContext();
+  if (currentUser) return <Navigate to="/" replace />;
   return element;
 };
 

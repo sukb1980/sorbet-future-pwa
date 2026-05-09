@@ -42,6 +42,21 @@ export default function Checkout() {
       const response = await paymentAuthorize({ amount: total, currency, method: paymentMethod, cardLast4: cardDetails.number.slice(-4) || '****' });
       setResult(response);
       if (response.status === 'success') {
+        const newOrder = {
+          orderId,
+          items: [...items],
+          total,
+          subtotal,
+          discountAmount,
+          loyaltyDiscount,
+          deliveryFee,
+          paymentMethod,
+          date: new Date().toISOString(),
+          status: 'completed'
+        };
+        const existingOrders = JSON.parse(localStorage.getItem('srb_orders') || '[]');
+        localStorage.setItem('srb_orders', JSON.stringify([newOrder, ...existingOrders]));
+
         clearCart();
         setStep(4);
         showToast?.('Payment successful! 🎉', 'success');

@@ -5,17 +5,19 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { FiHome, FiCalendar, FiShoppingBag, FiAward, FiUser } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { Badge } from '../ui/Primitives';
-
-const tabs = [
-  { label: 'Home', to: '/', icon: FiHome, exact: true },
-  { label: 'Book', to: '/booking/services', icon: FiCalendar },
-  { label: 'Shop', to: '/products', icon: FiShoppingBag, showCartBadge: true },
-  { label: 'Loyalty', to: '/loyalty', icon: FiAward },
-  { label: 'Profile', to: '/profile', icon: FiUser },
-];
+import { useAppContext } from '../../context/AppContext';
 
 export default function BottomNav() {
   const { itemCount } = useCart();
+  const { currentUser, t } = useAppContext();
+
+  const tabs = [
+    { label: t('home'), to: '/', icon: FiHome, exact: true },
+    { label: t('book'), to: '/booking/services', icon: FiCalendar },
+    { label: t('shop'), to: '/products', icon: FiShoppingBag, showCartBadge: true },
+    { label: t('loyalty'), to: '/loyalty', icon: FiAward },
+    { label: currentUser ? t('profile') : t('signIn'), to: currentUser ? '/profile' : '/auth/sign-in', icon: FiUser },
+  ];
 
   return (
     <nav style={{

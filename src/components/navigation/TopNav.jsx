@@ -10,7 +10,7 @@ import { getUnreadCount } from '../../data/notifications';
 import { supportedLocales, supportedCurrencies } from '../../data/i18n';
 
 export default function TopNav() {
-  const { currentUser, isGuest, language, setLanguage, currency, setCurrency } = useAppContext();
+  const { currentUser, isGuest, language, setLanguage, currency, setCurrency, t } = useAppContext();
   const { itemCount } = useCart();
   const navigate = useNavigate();
   const unread = getUnreadCount();
@@ -36,12 +36,12 @@ export default function TopNav() {
       {/* Desktop Nav Links */}
       <nav style={{ display: 'flex', gap: 'var(--space-md)', marginLeft: 'var(--space-lg)', flex: 1 }} className="desktop-nav">
         {[
-          { label: 'Home', to: '/' },
-          { label: 'Book', to: '/booking/services' },
-          { label: 'Shop', to: '/products' },
-          { label: 'Stores', to: '/stores' },
-          { label: 'Loyalty', to: '/loyalty' },
-          { label: 'Promotions', to: '/promotions' },
+          { label: t('home'), to: '/' },
+          { label: t('book'), to: '/booking/services' },
+          { label: t('shop'), to: '/products' },
+          { label: t('stores'), to: '/stores' },
+          { label: t('loyalty'), to: '/loyalty' },
+          { label: t('promotions'), to: '/promotions' },
         ].map((link) => (
           <Link key={link.to} to={link.to} style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)', textDecoration: 'none', padding: '4px 8px', borderRadius: 'var(--radius-xs)', transition: 'var(--transition-fast)' }}
             onMouseEnter={(e) => { e.target.style.color = 'var(--color-accent)'; e.target.style.background = 'var(--color-rose-gold-light)'; }}
@@ -74,10 +74,9 @@ export default function TopNav() {
           {itemCount > 0 && <span style={{ position: 'absolute', top: '4px', right: '4px' }}><Badge style={{ minWidth: '16px', height: '16px', fontSize: '0.625rem' }}>{itemCount}</Badge></span>}
         </button>
 
-        {/* Profile */}
-        <button onClick={() => navigate(currentUser || isGuest ? '/profile' : '/auth/sign-in')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: 'var(--radius-full)', background: 'var(--color-accent)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: '0.875rem', fontWeight: 600, fontFamily: 'var(--font-family)' }}>
+        <button onClick={() => navigate(currentUser ? '/profile' : '/auth/sign-in')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: 'var(--radius-full)', background: 'var(--color-accent)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: '0.875rem', fontWeight: 600, fontFamily: 'var(--font-family)' }}>
           <FiUser size={15} />
-          <span className="desktop-only">{currentUser ? currentUser.firstName : isGuest ? 'Guest' : 'Sign In'}</span>
+          <span className="desktop-only">{currentUser ? currentUser.firstName : t('signIn')}</span>
         </button>
       </div>
 

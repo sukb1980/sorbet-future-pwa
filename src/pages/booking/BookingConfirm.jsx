@@ -62,6 +62,25 @@ export default function BookingConfirm() {
     setConfirming(true);
     try {
       const result = await zenotiCreateBooking({ serviceId, citizenId, date, slot, storeId, addOns: selectedAddOns });
+      
+      const newBooking = {
+        id: result.confirmationNumber,
+        serviceId: service.id,
+        serviceName: service.name,
+        citizenName: citizen?.name || 'Any Available Citizen',
+        storeName: store?.name || 'Sorbet Clinic',
+        date: date,
+        time: slot,
+        totalPrice: totalPrice,
+        status: 'upcoming',
+        confirmationNumber: result.confirmationNumber,
+        pointsEarned: pointsToEarn,
+        createdAt: new Date().toISOString()
+      };
+      
+      const existingBookings = JSON.parse(localStorage.getItem('srb_my_bookings') || '[]');
+      localStorage.setItem('srb_my_bookings', JSON.stringify([newBooking, ...existingBookings]));
+
       setConfirmationNumber(result.confirmationNumber);
       setConfirmed(true);
       addPoints(pointsToEarn);

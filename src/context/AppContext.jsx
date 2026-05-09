@@ -130,13 +130,13 @@ export const AppProvider = ({ children }) => {
 
   const grantNotifications = useCallback(() => {
     setNotificationPermission('granted');
-    setOnboardingStep('location');
-  }, []);
+    completeOnboarding();
+  }, [completeOnboarding]);
 
   const denyNotifications = useCallback(() => {
     setNotificationPermission('denied');
-    setOnboardingStep('location');
-  }, []);
+    completeOnboarding();
+  }, [completeOnboarding]);
 
   const grantLocation = useCallback(() => {
     setLocationPermission('granted');

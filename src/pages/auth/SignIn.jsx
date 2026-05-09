@@ -47,10 +47,6 @@ export default function SignIn() {
           <p style={{ color: 'var(--text-secondary)' }}>Sign in to your Sorbet account</p>
         </div>
 
-        {/* Demo hint */}
-        <div style={{ background: 'var(--color-info-bg)', border: '1px solid var(--color-info)', borderRadius: 'var(--radius-md)', padding: 'var(--space-md)', marginBottom: 'var(--space-lg)', fontSize: '0.8125rem', color: 'var(--color-info)' }}>
-          🎯 <strong>Demo login:</strong> +27721234567 / Demo@123
-        </div>
 
         {isLocked && (
           <div style={{ background: 'var(--color-error-bg)', border: '1px solid var(--color-error)', borderRadius: 'var(--radius-md)', padding: 'var(--space-md)', marginBottom: 'var(--space-lg)', fontSize: '0.8125rem', color: 'var(--color-error)' }}>

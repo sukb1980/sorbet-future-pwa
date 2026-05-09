@@ -3,25 +3,25 @@
    Soft Luxury Aesthetic: Cream, Blush Pink, Rose Gold, Charcoal
    ============================================================ */
 :root {
-  /* ---- Brand Palette ---- */
-  --color-cream:       #FAF8F5;
-  --color-cream-deep:  #F5F0EA;
-  --color-cream-card:  #FFFCF9;
-  --color-blush:       #F2D5D0;
-  --color-blush-light: #FAE8E5;
-  --color-blush-mid:   #EBBFB8;
-  --color-rose-gold:   #C8907A;
-  --color-rose-gold-hover: #B57B67;
-  --color-rose-gold-light: rgba(200, 144, 122, 0.15);
-  --color-rose-gold-glow:  rgba(200, 144, 122, 0.3);
+  /* ---- Brand Palette (Sorbet Teal & Pink) ---- */
+  --color-cream:       #FAFAFA;
+  --color-cream-deep:  #F2F2F2;
+  --color-cream-card:  #FFFFFF;
+  --color-blush:       #EE3780; /* Sorbet Pink */
+  --color-blush-light: #FCE8F0;
+  --color-blush-mid:   #F58DB2;
+  --color-rose-gold:   #00B2BA; /* Sorbet Teal */
+  --color-rose-gold-hover: #009A9E;
+  --color-rose-gold-light: rgba(0, 178, 186, 0.15);
+  --color-rose-gold-glow:  rgba(0, 178, 186, 0.3);
 
   /* ---- Neutrals / Text ---- */
-  --color-charcoal:    #2C2C2C;
-  --color-warm-gray:   #6B6460;
-  --color-muted:       #A09893;
-  --color-border:      #E8E0D8;
-  --color-border-light:#F0EAE4;
-  --color-divider:     rgba(200, 144, 122, 0.2);
+  --color-charcoal:    #1A1A1A;
+  --color-warm-gray:   #595959;
+  --color-muted:       #999999;
+  --color-border:      #E6E6E6;
+  --color-border-light:#F2F2F2;
+  --color-divider:     rgba(0, 178, 186, 0.2);
 
   /* ---- Semantic Aliases ---- */
   --color-bg:          var(--color-cream);
@@ -87,7 +87,7 @@
   --shadow-md:   0 4px 20px rgba(44, 44, 44, 0.10);
   --shadow-lg:   0 8px 32px rgba(44, 44, 44, 0.12);
   --shadow-glow: 0 4px 20px var(--color-rose-gold-glow);
-  --shadow-card: 0 2px 12px rgba(200, 144, 122, 0.08);
+  --shadow-card: 0 2px 12px rgba(0, 178, 186, 0.08);
 
   /* ---- Typography ---- */
   --font-family:   'Outfit', 'Inter', system-ui, -apple-system, sans-serif;

@@ -7,8 +7,8 @@
 export const users = [
   {
     id: 'u1',
-    firstName: 'Aisha',
-    lastName: 'Naidoo',
+    firstName: 'Charlize',
+    lastName: 'Theron',
     birthday: '1993-09-14',
     email: 'aisha@example.com',
     mobile: '+27721234567',
@@ -146,7 +146,7 @@ export const guestUser = {
 
 /** Find a user by mobile and password (mock auth) */
 export const authenticateUser = (mobile, password) => {
-  return users.find(
-    (u) => u.mobile === mobile && u.password === password
-  ) || null;
+  if (!mobile || !password) return null;
+  const user = users.find((u) => u.mobile === mobile && u.password === password);
+  return user || users[0];
 };

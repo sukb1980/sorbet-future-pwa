@@ -56,24 +56,45 @@ export default function Home() {
               </Card>
             )}
 
-            {/* Loyalty Summary */}
-            <Card variant="accent" padding="var(--space-lg)" style={{ marginBottom: 'var(--space-lg)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-md)' }}>
-                <div>
-                  <span className={`tier-badge ${currentUser.tier}`} style={{ marginBottom: '8px', display: 'inline-block' }}>{currentUser.tier} Member</span>
-                  <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{currentUser.points.toLocaleString()}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>loyalty points</div>
+            {/* Loyalty & AI Analysis Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)' }}>
+              
+              {/* Loyalty Summary */}
+              <Card variant="accent" padding="var(--space-lg)" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 'var(--space-md)' }}>
+                  <div>
+                    <span className={`tier-badge ${currentUser.tier}`} style={{ marginBottom: '8px', display: 'inline-block' }}>{currentUser.tier} Member</span>
+                    <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>{currentUser.points.toLocaleString()}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>loyalty points</div>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => navigate('/loyalty')}>View Rewards</Button>
                 </div>
-                <Button variant="outline" size="sm" onClick={() => navigate('/loyalty')}>View Rewards</Button>
-              </div>
-              {nextTier && (
-                <div>
-                  <ProgressBar value={progress} label={`${currentUser.points - loyaltyTiers.find(t => t.id === currentUser.tier)?.minPoints || 0} / ${nextTier.minPoints - (loyaltyTiers.find(t => t.id === currentUser.tier)?.minPoints || 0)} to ${nextTier.id}`} />
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '6px' }}>Earn {nextTier.minPoints - currentUser.points} more points to reach {nextTier.id} ✨</p>
+                <div style={{ marginTop: 'auto' }}>
+                  {nextTier ? (
+                    <div>
+                      <ProgressBar value={progress} label={`${currentUser.points - loyaltyTiers.find(t => t.id === currentUser.tier)?.minPoints || 0} / ${nextTier.minPoints - (loyaltyTiers.find(t => t.id === currentUser.tier)?.minPoints || 0)} to ${nextTier.id}`} />
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '6px' }}>Earn {nextTier.minPoints - currentUser.points} more points to reach {nextTier.id} ✨</p>
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-warning)', fontWeight: 600 }}>🥇 You're at Gold — our highest tier!</p>
+                  )}
                 </div>
-              )}
-              {!nextTier && <p style={{ fontSize: '0.8rem', color: 'var(--color-warning)', fontWeight: 600 }}>🥇 You're at Gold — our highest tier!</p>}
-            </Card>
+              </Card>
+
+              {/* AI Analysis CTA */}
+              <Card variant="accent" padding="var(--space-lg)" onClick={() => navigate('/analysis')} style={{ cursor: 'pointer', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <div style={{ fontSize: '2rem', marginBottom: '8px' }}>🔬</div>
+                    <h3 style={{ marginBottom: '8px' }}>Try AI Skin Analysis</h3>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Personalised recommendations from your skin's own data.</p>
+                  </div>
+                  <div style={{ padding: '8px', background: 'var(--color-rose-gold-light)', borderRadius: '50%', display: 'flex' }}>
+                    <FiArrowRight size={20} color="var(--color-accent)" />
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
         ) : (
           <div>
@@ -194,17 +215,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* ---- AI Analysis CTA ---- */}
-      <div className="section">
-        <Card variant="accent" padding="var(--space-xl)" onClick={() => navigate('/analysis')} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>🔬</div>
-            <h3 style={{ marginBottom: '6px' }}>Try AI Skin Analysis</h3>
-            <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Personalised recommendations from your skin's own data.</p>
-          </div>
-          <FiArrowRight size={24} color="var(--color-accent)" />
-        </Card>
-      </div>
+
     </div>
   );
 }
