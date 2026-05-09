@@ -30,7 +30,7 @@ export default function TopNav() {
       {/* Logo */}
       <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', flexShrink: 0 }}>
         <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--color-rose-gold), var(--color-blush-mid))', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: '0.9rem' }}>S</div>
-        <span style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Sorbet Future</span>
+        <span className="desktop-only" style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Sorbet Future</span>
       </Link>
 
       {/* Desktop Nav Links */}
@@ -53,14 +53,16 @@ export default function TopNav() {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginLeft: 'auto' }}>
         {/* Language / Currency */}
-        <select value={language} onChange={(e) => setLanguage(e.target.value)}
-          style={{ background: 'transparent', border: 'none', fontSize: '0.8125rem', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}>
-          {supportedLocales.map((l) => <option key={l.code} value={l.code}>{l.flag} {l.code.toUpperCase()}</option>)}
-        </select>
-        <select value={currency} onChange={(e) => setCurrency(e.target.value)}
-          style={{ background: 'transparent', border: 'none', fontSize: '0.8125rem', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}>
-          {supportedCurrencies.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
-        </select>
+        <div className="desktop-only" style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+          <select value={language} onChange={(e) => setLanguage(e.target.value)}
+            style={{ background: 'transparent', border: 'none', fontSize: '0.8125rem', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}>
+            {supportedLocales.map((l) => <option key={l.code} value={l.code}>{l.flag} {l.code.toUpperCase()}</option>)}
+          </select>
+          <select value={currency} onChange={(e) => setCurrency(e.target.value)}
+            style={{ background: 'transparent', border: 'none', fontSize: '0.8125rem', color: 'var(--text-secondary)', cursor: 'pointer', padding: '4px' }}>
+            {supportedCurrencies.map((c) => <option key={c.code} value={c.code}>{c.code}</option>)}
+          </select>
+        </div>
 
         {/* Notifications */}
         <button onClick={() => navigate('/notifications')} style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-cream-deep)', border: '1px solid var(--color-border)', cursor: 'pointer' }} aria-label="Notifications">
@@ -74,16 +76,47 @@ export default function TopNav() {
           {itemCount > 0 && <span style={{ position: 'absolute', top: '4px', right: '4px' }}><Badge style={{ minWidth: '16px', height: '16px', fontSize: '0.625rem' }}>{itemCount}</Badge></span>}
         </button>
 
-        <button onClick={() => navigate(currentUser ? '/profile' : '/auth/sign-in')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 14px', borderRadius: 'var(--radius-full)', background: 'var(--color-accent)', border: 'none', cursor: 'pointer', color: '#fff', fontSize: '0.875rem', fontWeight: 600, fontFamily: 'var(--font-family)' }}>
-          <FiUser size={15} />
+        <button className="profile-btn" onClick={() => navigate(currentUser ? '/profile' : '/auth/sign-in')} aria-label="Profile">
+          <FiUser size={18} className="profile-icon" />
           <span className="desktop-only">{currentUser ? currentUser.firstName : t('signIn')}</span>
         </button>
       </div>
 
       <style>{`
+        .profile-btn {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: var(--color-accent);
+          border: none;
+          cursor: pointer;
+          color: #fff;
+          font-family: var(--font-family);
+          transition: var(--transition-fast);
+        }
+        @media (min-width: 768px) {
+          .profile-btn {
+            width: auto;
+            height: auto;
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+          }
+          .profile-icon {
+            width: 15px;
+            height: 15px;
+          }
+        }
         @media (max-width: 767px) {
           .desktop-nav { display: none !important; }
           .desktop-only { display: none !important; }
+          header { padding: 0 var(--space-sm) !important; gap: var(--space-xs) !important; }
         }
       `}</style>
     </header>
